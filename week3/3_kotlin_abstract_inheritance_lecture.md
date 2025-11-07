@@ -1,4 +1,4 @@
-# Inheritance and Liskov Substitution Principle in Kotlin
+# Inheritance, Abstract Classes and Interfaces in Kotlin
 ## CO5225 - Lecture Session
 
 ---
