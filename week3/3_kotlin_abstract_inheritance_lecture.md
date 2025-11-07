@@ -49,7 +49,7 @@
 
 ## Section 1: Introduction and Overview (3 minutes)
 
-Welcome to today's lecture on Inheritance and the Liskov Substitution Principle in Kotlin. Today, we'll explore one of the fundamental concepts of Object-Oriented Programming: inheritance, and how Kotlin handles it differently from languages like Java.
+Today, we'll explore one of the fundamental concepts of Object-Oriented Programming: inheritance, and how Kotlin handles it differently from languages like Java.
 
 **Why Inheritance Matters:**
 - Enables code reuse through hierarchical relationships
@@ -1445,4 +1445,3 @@ Remember: **Inheritance is powerful but should be used thoughtfully.** Always as
 2. Does the subtype truly substitute the base type (LSP)?
 3. Could composition solve this better?
 
-Happy coding! 🚀
