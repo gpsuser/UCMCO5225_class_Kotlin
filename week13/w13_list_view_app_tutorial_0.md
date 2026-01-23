@@ -221,7 +221,7 @@ fun SimpleListView(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun SimpleListViewPreview() {
+fun GreetingPreview() {
     TestingListviewTheme {
         SimpleListView()
     }
@@ -313,7 +313,7 @@ fun SimpleListView(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun SimpleListViewPreview() {
+fun GreetingPreview() {
     TestingListviewTheme {
         SimpleListView()
     }
@@ -420,7 +420,7 @@ fun SimpleListView(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun SimpleListViewPreview() {
+fun GreetingPreview() {
     TestingListviewTheme {
         SimpleListView()
     }
