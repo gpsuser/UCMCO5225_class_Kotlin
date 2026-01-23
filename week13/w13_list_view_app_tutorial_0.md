@@ -431,4 +431,4 @@ fun GreetingPreview() {
 
 ## Conclusion
 
-Congratulations! You have successfully built a dynamic list app in Jetpack Compose. You've learned how to display data, style it, handle user input, and manage state to create a responsive UI. From here, you could try adding an "Add" button to insert new items, or make the list items navigate to a new screen with more details. Happy coding!
+Congratulations! You have successfully built a dynamic list app in Jetpack Compose. You've learned how to display data, style it, handle user input, and manage state to create a responsive UI. From here, you could try adding an "Add" button to insert new items, or make the list items navigate to a new screen with more details. 
