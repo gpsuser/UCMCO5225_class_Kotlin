@@ -1,6 +1,6 @@
 ## List views
 
-## Tutoril
+## Tutorial
 https://tutorials.tinyappco.com/Kotlin/ListViews
 
 
