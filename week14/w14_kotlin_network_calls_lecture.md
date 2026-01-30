@@ -14,7 +14,7 @@
 10. [Making Network Requests in Android](#making-network-requests-in-android)
 11. [Working with JSON Responses](#working-with-json-responses)
 12. [Type Casts and Type Checks in Kotlin](#type-casts-and-type-checks-in-kotlin)
-13. [Complete Example: Fetching Data from a Web API](#complete-example-fetching-data-from-a-web-api)
+
 
 ---
 
