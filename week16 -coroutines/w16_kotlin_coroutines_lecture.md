@@ -47,6 +47,8 @@ In traditional synchronous programming, tasks execute one after another, each wa
 
 Kotlin provides **coroutines** as its solution for asynchronous programming, offering a more intuitive and less error-prone approach compared to traditional threading or callback-based systems.
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Understanding Synchronous Code
@@ -117,6 +119,8 @@ All operations complete!
 
 Notice that the total time is the sum of all individual operations (1000 + 1500 + 500 = 3000ms). Each task waits for the previous one to complete before starting.
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Understanding Asynchronous Code
@@ -146,6 +150,8 @@ Different programming languages and platforms use various approaches:
 4. **Reactive Extensions**: Observable streams for handling asynchronous data
 5. **Coroutines**: Kotlin's lightweight approach (what we'll focus on)
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Introduction to Coroutines
@@ -173,6 +179,8 @@ A coroutine is a lightweight thread-like construct that can:
 - **Coroutine scope**: Defines the lifecycle and context of coroutines
 - **Job**: Represents a cancellable coroutine
 - **Dispatcher**: Determines which thread(s) the coroutine runs on
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -213,6 +221,8 @@ Most coroutine programs will need these imports:
 ```kotlin
 import kotlinx.coroutines.*
 ```
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -327,6 +337,8 @@ Setup complete
 Job is active: false
 Job is completed: true
 ```
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -623,6 +635,8 @@ All systems initialized. Application ready!
 
 All three initialization tasks run concurrently, but the program waits for all of them to complete before proceeding.
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Returning Values with async and await
@@ -805,6 +819,8 @@ Computation complete
 Result outside async: 42
 ```
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Grouping Asynchronous Functions
@@ -949,6 +965,8 @@ Dashboard(userName=John Doe, messageCount=15, notificationCount=3, unreadCount=8
 - **Reusability**: Use the grouped function in multiple places
 - **Clarity**: Clear separation of concerns
 - **Maintainability**: Easier to modify grouped operations
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1108,6 +1126,8 @@ Download status: Cancelled
 2. **Suspension points**: Functions like `delay()` check for cancellation automatically
 3. **CancellationException**: Thrown when a suspended function is called on a cancelled coroutine
 4. **Resource cleanup**: Use try-finally blocks to clean up resources
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1337,6 +1357,8 @@ Algorithm 3 won!
 Solution from Algorithm 3
 ```
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Nesting select Expressions
@@ -1527,6 +1549,8 @@ Timeout - cancelled both
 
 Final result: Both unavailable
 ```
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1748,6 +1772,8 @@ Cleanup completed
 3. **Consider using supervisorScope**: For independent failure handling
 4. **Use withTimeout for time limits**: Built-in timeout functionality
 5. **Log exceptions appropriately**: Help with debugging
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ---
 
