@@ -1,0 +1,942 @@
+<h1 id="oop-principles-srp-lsp-and-object-composition">OOP Principles,
+SRP, LSP, and Object Composition</h1>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#learning-outcomes">Learning Outcomes</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#inheritance">Inheritance</a></li>
+<li><a href="#abstraction">Abstraction</a></li>
+<li><a href="#encapsulation">Encapsulation</a></li>
+<li><a href="#polymorphism">Polymorphism</a></li>
+<li><a href="#single-responsibility-principle">Single Responsibility
+Principle</a></li>
+<li><a
+href="#whole-part-relationships-and-object-composition">Whole-Part
+Relationships and Object Composition</a></li>
+<li><a href="#liskov-substitution-principle">Liskov Substitution
+Principle</a></li>
+</ul>
+<hr />
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this lecture, you will be able to:</p>
+<ul>
+<li>Explain and apply the four core principles of Object-Oriented
+Programming: <strong>Inheritance</strong>, <strong>Abstraction</strong>,
+<strong>Encapsulation</strong>, and <strong>Polymorphism</strong></li>
+<li>Implement these principles using Kotlin, including the use of
+<code>open</code>, <code>abstract</code>, and visibility modifiers</li>
+<li>Apply the <strong>Single Responsibility Principle (SRP)</strong>
+when designing classes</li>
+<li>Distinguish between <strong>aggregation</strong> and
+<strong>composition</strong> as forms of whole-part relationships</li>
+<li>Explain and apply the <strong>Liskov Substitution Principle
+(LSP)</strong> and identify common violations</li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>Object-Oriented Programming (OOP) is a programming paradigm built
+around the concept of <strong>objects</strong> — self-contained units
+that combine data (properties) and behaviour (methods). OOP gives us a
+powerful toolkit for designing software that is modular, reusable, and
+maintainable.</p>
+<p>Kotlin is a modern, statically-typed language that fully supports
+OOP. In this lecture, we explore the four core principles of OOP —
+Inheritance, Abstraction, Encapsulation, and Polymorphism — and then
+extend our understanding to include two influential design principles:
+the <strong>Single Responsibility Principle (SRP)</strong> and the
+<strong>Liskov Substitution Principle (LSP)</strong>. We also examine
+how objects can be structured together through <strong>whole-part
+relationships</strong>.</p>
+<p>Understanding these principles will help you write better-structured
+code that is easier to maintain, extend, and reason about.</p>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />
+<h2 id="inheritance">Inheritance</h2>
+<h3 id="what-is-inheritance">What Is Inheritance?</h3>
+<p>Inheritance is one of the foundational concepts of OOP. It allows a
+class to <strong>inherit</strong> properties and behaviour from another
+class. The class that is inherited from is called the
+<strong>superclass</strong> (or parent class), and the class that does
+the inheriting is called the <strong>subclass</strong> (or child
+class).</p>
+<p>The key idea is:</p>
+<ul>
+<li>A <strong>superclass</strong> defines general properties and
+behaviour</li>
+<li>A <strong>subclass</strong> inherits those general characteristics
+and may add or override them with more specific ones</li>
+</ul>
+<p>A classic way to think about this is the <strong>IS-A</strong>
+relationship. For example: - A <code>Kettle</code> IS a
+<code>HomeAppliance</code> - A <code>Dog</code> IS an
+<code>Animal</code> - A <code>SavingsAccount</code> IS a
+<code>BankAccount</code></p>
+<p>Because a <code>Kettle</code> IS a <code>HomeAppliance</code>, it
+should have all the general attributes and behaviours of a
+<code>HomeAppliance</code> — such as being switched on or off, having a
+power rating, and so on — plus its own specific features like boiling
+water.</p>
+<h3 id="inheritance-in-kotlin">Inheritance in Kotlin</h3>
+<p>In Kotlin, classes are <strong>closed for inheritance by
+default</strong>. This is a deliberate design decision — it prevents
+unintended subclassing and aligns with good software design practices.
+To allow a class to be subclassed, you must mark it with the
+<code>open</code> keyword.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Superclass - marked &#39;open&#39; to allow inheritance</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> <span class="kw">class</span> HomeAppliance<span class="op">(</span><span class="kw">val</span> <span class="va">brand</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">powerRatingWatts</span><span class="op">:</span> <span class="dt">Int</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Open function so subclasses can override it</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">open</span> <span class="kw">fun</span> <span class="fu">switchOn</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$brand</span><span class="st"> appliance is now on. Power rating: </span><span class="ss">${</span>powerRatingWatts<span class="ss">}</span><span class="st">W&quot;</span><span class="op">)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">switchOff</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$brand</span><span class="st"> appliance switched off.&quot;</span><span class="op">)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">// Subclass - inherits from HomeAppliance using the colon (:) syntax</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Kettle<span class="op">(</span><span class="va">brand</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">powerRatingWatts</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="kw">val</span> <span class="va">capacityLitres</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">:</span> <span class="dt">HomeAppliance</span><span class="op">(</span><span class="va">brand</span><span class="op">,</span> <span class="va">powerRatingWatts</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Override the switchOn function with more specific behaviour</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">switchOn</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$brand</span><span class="st"> kettle is now boiling </span><span class="ss">${</span>capacityLitres<span class="ss">}</span><span class="st">L of water. Power: </span><span class="ss">${</span>powerRatingWatts<span class="ss">}</span><span class="st">W&quot;</span><span class="op">)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">boil</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$brand</span><span class="st"> kettle reached boiling point. Click!&quot;</span><span class="op">)</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Entry point</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">myKettle</span> <span class="op">=</span> Kettle<span class="op">(</span>brand <span class="op">=</span> <span class="st">&quot;Breville&quot;</span><span class="op">,</span> powerRatingWatts <span class="op">=</span> <span class="dv">3000</span><span class="op">,</span> capacityLitres <span class="op">=</span> <span class="fl">1.7</span><span class="op">)</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    myKettle<span class="op">.</span>switchOn<span class="op">()</span>   <span class="co">// Calls overridden version</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    myKettle<span class="op">.</span>boil<span class="op">()</span>       <span class="co">// Specific to Kettle</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    myKettle<span class="op">.</span>switchOff<span class="op">()</span>  <span class="co">// Inherited from HomeAppliance</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>Breville kettle is now boiling 1.7L of water. Power: 3000W
+Breville kettle reached boiling point. Click!
+Breville appliance switched off.</code></pre>
+<h3 id="key-points">Key Points</h3>
+<ul>
+<li>Use the <code>open</code> keyword on a class to allow it to be
+extended</li>
+<li>Use the <code>open</code> keyword on a function to allow subclasses
+to override it</li>
+<li>Use <code>override</code> in the subclass to replace a function’s
+behaviour</li>
+<li>The subclass constructor calls the superclass constructor using the
+<code>: SuperclassName(args)</code> syntax</li>
+</ul>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />
+<h2 id="abstraction">Abstraction</h2>
+<h3 id="the-concept-of-abstraction">The Concept of Abstraction</h3>
+<p>Abstraction means focusing on <strong>what</strong> something does
+rather than <strong>how</strong> it does it. It lets us model complex
+systems at a higher level, hiding unnecessary detail and presenting only
+what is relevant.</p>
+<p>Think about driving a car. When you press the accelerator, you don’t
+need to understand the combustion process, fuel injection, or crankshaft
+rotation. You simply know that pressing the pedal makes the car go
+faster. The car’s internal complexity is <strong>abstracted
+away</strong>.</p>
+<p>In programming terms, abstraction allows us to: - Define the
+<strong>structure</strong> and <strong>interface</strong> of a class
+without committing to a concrete implementation - Defer implementation
+details to subclasses</p>
+<h3 id="abstraction-in-kotlin-abstract-classes">Abstraction in Kotlin:
+Abstract Classes</h3>
+<p>An <strong>abstract class</strong> is a class that cannot be
+instantiated directly. It may contain abstract functions — functions
+that are declared but have no body — leaving it to subclasses to provide
+the implementation.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Abstract class - cannot be instantiated directly</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">abstract</span> <span class="kw">class</span> Shape<span class="op">(</span><span class="kw">val</span> <span class="va">colour</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Abstract function - no body, must be implemented by subclasses</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">abstract</span> <span class="kw">fun</span> <span class="fu">area</span><span class="op">():</span> <span class="dt">Double</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Concrete function - available to all subclasses</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">describe</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;This is a </span><span class="ss">$colour</span><span class="st"> shape with area: </span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>area<span class="op">())</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Concrete subclass implementing the abstract function</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Circle<span class="op">(</span><span class="va">colour</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">radius</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">:</span> <span class="dt">Shape</span><span class="op">(</span><span class="va">colour</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">area</span><span class="op">():</span> <span class="dt">Double</span> <span class="op">=</span> Math<span class="op">.</span>PI <span class="op">*</span> radius <span class="op">*</span> radius</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">// Another concrete subclass</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Rectangle<span class="op">(</span><span class="va">colour</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">width</span><span class="op">:</span> <span class="dt">Double</span><span class="op">,</span> <span class="kw">val</span> <span class="va">height</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">:</span> <span class="dt">Shape</span><span class="op">(</span><span class="va">colour</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">area</span><span class="op">():</span> <span class="dt">Double</span> <span class="op">=</span> width <span class="op">*</span> height</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">// val s = Shape(&quot;red&quot;)  // ERROR - cannot instantiate abstract class</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">circle</span> <span class="op">=</span> Circle<span class="op">(</span>colour <span class="op">=</span> <span class="st">&quot;red&quot;</span><span class="op">,</span> radius <span class="op">=</span> <span class="fl">5.0</span><span class="op">)</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">rect</span> <span class="op">=</span> Rectangle<span class="op">(</span>colour <span class="op">=</span> <span class="st">&quot;blue&quot;</span><span class="op">,</span> width <span class="op">=</span> <span class="fl">4.0</span><span class="op">,</span> height <span class="op">=</span> <span class="fl">6.0</span><span class="op">)</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    circle<span class="op">.</span>describe<span class="op">()</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">.</span>describe<span class="op">()</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>This is a red shape with area: 78.54
+This is a blue shape with area: 24.00</code></pre>
+<h3 id="abstraction-in-kotlin-interfaces">Abstraction in Kotlin:
+Interfaces</h3>
+<p>An <strong>interface</strong> defines a contract — it specifies
+<strong>what</strong> a class should be able to do, without saying
+<strong>how</strong>. Any class that implements an interface must
+provide implementations for its declared functions.</p>
+<p>Interfaces differ from abstract classes in several important ways: -
+A class can implement <strong>multiple</strong> interfaces, but only
+extend one class - Interfaces cannot hold constructor parameters or
+state (though they can have default function implementations)</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Interface - defines a contract for &quot;printable&quot; things</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> Printable <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">printDetails</span><span class="op">()</span>  <span class="co">// No implementation</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Another interface</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> <span class="fu">Saveable</span> <span class="op">{</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">saveToFile</span><span class="op">(</span><span class="va">fileName</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span>  <span class="co">// No implementation</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Class implementing two interfaces</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="kw">class</span> <span class="fu">StudentRecord</span><span class="op">(</span><span class="kw">val</span> <span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">studentId</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">grade</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">:</span> <span class="dt">Printable</span>, <span class="fu">Saveable</span> <span class="op">{</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Must implement printDetails from Printable</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">printDetails</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Student: </span><span class="ss">$name</span><span class="st"> | ID: </span><span class="ss">$studentId</span><span class="st"> | Grade: </span><span class="ss">$grade</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Must implement saveToFile from Saveable</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">saveToFile</span><span class="op">(</span><span class="va">fileName</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Saving record for </span><span class="ss">$name</span><span class="st"> to file: </span><span class="ss">$fileName</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">record</span> <span class="op">=</span> StudentRecord<span class="op">(</span>name <span class="op">=</span> <span class="st">&quot;Alice&quot;</span><span class="op">,</span> studentId <span class="op">=</span> <span class="st">&quot;CS1042&quot;</span><span class="op">,</span> grade <span class="op">=</span> <span class="fl">72.5</span><span class="op">)</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    record<span class="op">.</span>printDetails<span class="op">()</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    record<span class="op">.</span>saveToFile<span class="op">(</span><span class="st">&quot;records_2025.txt&quot;</span><span class="op">)</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>Student: Alice | ID: CS1042 | Grade: 72.5
+Saving record for Alice to file: records_2025.txt</code></pre>
+<h3 id="summary-abstract-class-vs-interface">Summary: Abstract Class vs
+Interface</h3>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 32%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Abstract Class</th>
+<th>Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Can hold state/fields</td>
+<td>Yes</td>
+<td>Limited (no backing fields)</td>
+</tr>
+<tr>
+<td>Multiple inheritance</td>
+<td>No (single only)</td>
+<td>Yes (multiple)</td>
+</tr>
+<tr>
+<td>Constructor parameters</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Default implementations</td>
+<td>Yes</td>
+<td>Yes (since Kotlin 1.x)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />
+<h2 id="encapsulation">Encapsulation</h2>
+<h3 id="the-concept-of-encapsulation">The Concept of Encapsulation</h3>
+<p>While abstraction is about <strong>what</strong> you can see at a
+high level, encapsulation is about <strong>controlling</strong> what can
+be seen and changed. Encapsulation means bundling data and the methods
+that operate on it into a single unit (the class), and <strong>hiding
+the internal details</strong> from the outside world.</p>
+<p>Think of a class as a <strong>black box</strong> — external code can
+interact with it through a defined public interface, but the internal
+workings are hidden. This offers several benefits:</p>
+<ul>
+<li><strong>Data integrity</strong> — prevents external code from
+putting an object into an invalid state</li>
+<li><strong>Flexibility</strong> — you can change the internal
+implementation without affecting code that uses the class</li>
+<li><strong>Maintainability</strong> — the class is self-contained and
+easier to reason about</li>
+</ul>
+<h3 id="visibility-modifiers-in-kotlin">Visibility Modifiers in
+Kotlin</h3>
+<p>Kotlin provides four visibility modifiers to control access to
+classes, properties, and functions:</p>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 82%" />
+</colgroup>
+<thead>
+<tr>
+<th>Modifier</th>
+<th>Visibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>private</code></td>
+<td>Only visible <strong>inside the class</strong></td>
+</tr>
+<tr>
+<td><code>protected</code></td>
+<td>Visible inside the class and in <strong>subclasses</strong></td>
+</tr>
+<tr>
+<td><code>internal</code></td>
+<td>Visible anywhere in the <strong>same module</strong> (compiled
+unit)</td>
+</tr>
+<tr>
+<td><code>public</code></td>
+<td>Visible by <strong>anything</strong> that can see the class (the
+default)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> If no modifier is specified, Kotlin defaults
+to <code>public</code>.</p>
+</blockquote>
+<h3 id="implementing-encapsulation">Implementing Encapsulation</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// A BankAccount class demonstrating encapsulation</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BankAccount<span class="op">(</span><span class="va">owner</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">initialBalance</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Public property - safe to expose</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">owner</span><span class="op">:</span> <span class="kw">String</span> <span class="op">=</span> owner</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Private property - hidden from outside; cannot be set directly</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="kw">var</span> <span class="va">balance</span><span class="op">:</span> <span class="kw">Double</span> <span class="op">=</span> initialBalance</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Private helper - internal use only</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="kw">fun</span> <span class="fu">logTransaction</span><span class="op">(</span><span class="va">type</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">amount</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;[</span><span class="ss">$type</span><span class="st">] £</span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>amount<span class="op">)</span><span class="ss">}</span><span class="st"> | New balance: £</span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>balance<span class="op">)</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Public method - controlled way to deposit money</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">deposit</span><span class="op">(</span><span class="va">amount</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>amount <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            balance <span class="op">+=</span> amount</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            logTransaction<span class="op">(</span><span class="st">&quot;DEPOSIT&quot;</span><span class="op">,</span> amount<span class="op">)</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>            println<span class="op">(</span><span class="st">&quot;Deposit amount must be positive.&quot;</span><span class="op">)</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Public method - controlled way to withdraw money</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">withdraw</span><span class="op">(</span><span class="va">amount</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>amount <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> amount <span class="op">&lt;=</span> balance<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>            balance <span class="op">-=</span> amount</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>            logTransaction<span class="op">(</span><span class="st">&quot;WITHDRAW&quot;</span><span class="op">,</span> amount<span class="op">)</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            println<span class="op">(</span><span class="st">&quot;Invalid withdrawal amount or insufficient funds.&quot;</span><span class="op">)</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Public method - read-only access to balance</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">getBalance</span><span class="op">():</span> <span class="dt">Double</span> <span class="op">=</span> balance</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">account</span> <span class="op">=</span> BankAccount<span class="op">(</span>owner <span class="op">=</span> <span class="st">&quot;Bob&quot;</span><span class="op">,</span> initialBalance <span class="op">=</span> <span class="fl">500.00</span><span class="op">)</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    account<span class="op">.</span>deposit<span class="op">(</span><span class="fl">150.00</span><span class="op">)</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    account<span class="op">.</span>withdraw<span class="op">(</span><span class="fl">200.00</span><span class="op">)</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    account<span class="op">.</span>withdraw<span class="op">(</span><span class="fl">600.00</span><span class="op">)</span>  <span class="co">// Should fail</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    <span class="co">// account.balance = 9999.00  // ERROR - balance is private</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;Final balance for </span><span class="ss">${</span>account<span class="op">.</span>owner<span class="ss">}</span><span class="st">: £</span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>account<span class="op">.</span>getBalance<span class="op">())</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>[DEPOSIT] £150.00 | New balance: £650.00
+[WITHDRAW] £200.00 | New balance: £450.00
+Invalid withdrawal amount or insufficient funds.
+Final balance for Bob: £450.00</code></pre>
+<p>In this example, <code>balance</code> is <code>private</code> — no
+external code can set it directly. The only way to change it is through
+<code>deposit()</code> and <code>withdraw()</code>, which apply
+validation logic. This protects the account from being put into an
+invalid state.</p>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />
+<h2 id="polymorphism">Polymorphism</h2>
+<h3 id="what-is-polymorphism">What Is Polymorphism?</h3>
+<p>The word <strong>polymorphism</strong> comes from Greek, meaning
+<em>“many forms”</em>. In OOP, polymorphism allows objects of different
+types to be treated as objects of a common supertype. More practically,
+it means that the same method call can produce <strong>different
+behaviour</strong> depending on the actual type of the object at
+runtime.</p>
+<p>Polymorphism builds directly on inheritance. Because a subclass IS-A
+superclass, you can write code that works with the superclass type, and
+at runtime the correct subclass behaviour is invoked automatically. This
+is called <strong>runtime polymorphism</strong> (or <strong>dynamic
+dispatch</strong>).</p>
+<h3 id="polymorphism-in-practice-cooking-with-kotlin">Polymorphism in
+Practice: Cooking with Kotlin</h3>
+<p>Let’s explore polymorphism with a cooking-themed example. We define a
+general <code>Ingredient</code> superclass and several subclasses. A
+recipe-processing function works with <code>Ingredient</code> objects —
+it doesn’t need to know the exact type until runtime.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">kotlin</span><span class="op">.</span><span class="im">math</span><span class="op">.</span><span class="im">roundToInt</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Open superclass representing a generic ingredient</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> <span class="kw">class</span> Ingredient<span class="op">(</span><span class="kw">val</span> <span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">weightGrams</span><span class="op">:</span> <span class="dt">Int</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Open function - subclasses can override preparation behaviour</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">open</span> <span class="kw">fun</span> <span class="fu">prepare</span><span class="op">():</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="st">&quot;Prepare </span><span class="ss">$name</span><span class="st"> (</span><span class="ss">$weightGrams</span><span class="st"> g)&quot;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Subclass: Vegetable has a specific preparation method</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Vegetable<span class="op">(</span><span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">weightGrams</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="kw">val</span> <span class="va">chopStyle</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">:</span> <span class="dt">Ingredient</span><span class="op">(</span><span class="va">name</span><span class="op">,</span> <span class="va">weightGrams</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">prepare</span><span class="op">():</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="st">&quot;Chop </span><span class="ss">$name</span><span class="st"> (</span><span class="ss">$weightGrams</span><span class="st"> g) into </span><span class="ss">$chopStyle</span><span class="st"> pieces&quot;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Subclass: Protein has a different preparation method</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Protein<span class="op">(</span><span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">weightGrams</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="kw">val</span> <span class="va">cookingMethod</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">:</span> <span class="dt">Ingredient</span><span class="op">(</span><span class="va">name</span><span class="op">,</span> <span class="va">weightGrams</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">prepare</span><span class="op">():</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="st">&quot;</span><span class="ss">$cookingMethod</span><span class="st"> </span><span class="ss">$name</span><span class="st"> (</span><span class="ss">$weightGrams</span><span class="st"> g) until thoroughly cooked&quot;</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Subclass: Spice has its own behaviour</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Spice<span class="op">(</span><span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">weightGrams</span><span class="op">:</span> <span class="dt">Int</span><span class="op">)</span> <span class="op">:</span> <span class="dt">Ingredient</span><span class="op">(</span><span class="va">name</span><span class="op">,</span> <span class="va">weightGrams</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">prepare</span><span class="op">():</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="st">&quot;Add a pinch of </span><span class="ss">$name</span><span class="st"> (</span><span class="ss">$weightGrams</span><span class="st"> g) to taste&quot;</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">// Function that works with any Ingredient - polymorphism in action</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">prepareRecipe</span><span class="op">(</span><span class="va">ingredients</span><span class="op">:</span> <span class="dt">List</span>&lt;<span class="va">Ingredient</span>&gt;<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;=== Preparing Recipe ===&quot;</span><span class="op">)</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>ingredient <span class="kw">in</span> ingredients<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>        <span class="co">// The correct &#39;prepare()&#39; method is called at runtime based on actual type</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;- </span><span class="ss">${</span>ingredient<span class="op">.</span>prepare<span class="op">()</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    <span class="co">// A list of different Ingredient subtypes</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">recipe</span><span class="op">:</span> List<span class="op">&lt;</span>Ingredient<span class="op">&gt;</span> <span class="op">=</span> listOf<span class="op">(</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>        Vegetable<span class="op">(</span>name <span class="op">=</span> <span class="st">&quot;Onion&quot;</span><span class="op">,</span> weightGrams <span class="op">=</span> <span class="dv">150</span><span class="op">,</span> chopStyle <span class="op">=</span> <span class="st">&quot;fine&quot;</span><span class="op">),</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>        Vegetable<span class="op">(</span>name <span class="op">=</span> <span class="st">&quot;Pepper&quot;</span><span class="op">,</span> weightGrams <span class="op">=</span> <span class="dv">120</span><span class="op">,</span> chopStyle <span class="op">=</span> <span class="st">&quot;strips&quot;</span><span class="op">),</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>        Protein<span class="op">(</span>name <span class="op">=</span> <span class="st">&quot;Chicken&quot;</span><span class="op">,</span> weightGrams <span class="op">=</span> <span class="dv">400</span><span class="op">,</span> cookingMethod <span class="op">=</span> <span class="st">&quot;Grill&quot;</span><span class="op">),</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>        Spice<span class="op">(</span>name <span class="op">=</span> <span class="st">&quot;Cumin&quot;</span><span class="op">,</span> weightGrams <span class="op">=</span> <span class="dv">5</span><span class="op">)</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="co">// prepareRecipe doesn&#39;t need to know the subtypes - polymorphism handles it</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>    prepareRecipe<span class="op">(</span>recipe<span class="op">)</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>=== Preparing Recipe ===
+- Chop Onion (150 g) into fine pieces
+- Chop Pepper (120 g) into strips
+- Grill Chicken (400 g) until thoroughly cooked
+- Add a pinch of Cumin (5 g) to taste</code></pre>
+<p>Notice that <code>prepareRecipe()</code> takes a
+<code>List&lt;Ingredient&gt;</code>. It doesn’t know whether each item
+is a <code>Vegetable</code>, <code>Protein</code>, or <code>Spice</code>
+— and it doesn’t need to. At runtime, Kotlin calls the correct
+<code>prepare()</code> method for each object’s actual type. This is
+polymorphism.</p>
+<h3 id="why-is-polymorphism-valuable">Why Is Polymorphism Valuable?</h3>
+<ul>
+<li>You can write <strong>general-purpose code</strong> that works with
+entire families of types</li>
+<li>Adding new subtypes (e.g., a <code>Sauce</code> class) requires
+<strong>no changes</strong> to the existing processing logic</li>
+<li>It reduces <code>if/else</code> or <code>when</code> chains that
+check object types, making code cleaner</li>
+</ul>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />
+<h2 id="single-responsibility-principle">Single Responsibility
+Principle</h2>
+<h3 id="the-principle">The Principle</h3>
+<p>The <strong>Single Responsibility Principle (SRP)</strong> is one of
+the SOLID principles of software design, originally articulated by
+Robert C. Martin. It states:</p>
+<blockquote>
+<p><em>“A class should have only one reason to change.”</em></p>
+</blockquote>
+<p>What this means in practice is that each class should be responsible
+for <strong>one thing</strong> — one area of functionality, one concern,
+one actor. If a class has multiple responsibilities, then there are
+multiple reasons it might need to change, which increases the risk of
+bugs and makes the code harder to maintain.</p>
+<h3 id="a-concrete-analogy">A Concrete Analogy</h3>
+<p>Consider a <strong>DVD-TV combo unit</strong>. It plays DVDs and
+displays images on a screen. Sounds convenient — but what happens when:
+- Optical media evolves and you need Blu-ray support? You must modify
+the device. - TV standards change to support HD? You also must modify
+the device.</p>
+<p>The device has <strong>two reasons to change</strong>, because it has
+two responsibilities. If those concerns were separate — a dedicated TV
+and a dedicated Blu-ray player — each device would only change for its
+own reason.</p>
+<h3 id="srp-violation">SRP Violation</h3>
+<p>Here is an example of a class that violates SRP:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">// BAD EXAMPLE - This class has too many responsibilities</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> OrderProcessor <span class="op">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Responsibility 1: business logic</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">calculateTotal</span><span class="op">(</span><span class="va">items</span><span class="op">:</span> <span class="dt">Map</span>&lt;<span class="va">String</span><span class="op">,</span> <span class="va">Double</span>&gt;<span class="op">):</span> <span class="dt">Double</span> <span class="op">{</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> items<span class="op">.</span>values<span class="op">.</span>sum<span class="op">()</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Responsibility 2: database persistence</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">saveOrderToDatabase</span><span class="op">(</span><span class="va">orderId</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">total</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Saving order </span><span class="ss">$orderId</span><span class="st"> with total £</span><span class="ss">$total</span><span class="st"> to database...&quot;</span><span class="op">)</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Responsibility 3: sending notifications</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">sendConfirmationEmail</span><span class="op">(</span><span class="va">customerEmail</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">orderId</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Sending confirmation email to </span><span class="ss">$customerEmail</span><span class="st"> for order </span><span class="ss">$orderId</span><span class="st">...&quot;</span><span class="op">)</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>This class has <strong>three reasons to change</strong>: the business
+logic for calculating totals, the database storage mechanism, and the
+notification system.</p>
+<h3 id="srp-applied">SRP Applied</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">// GOOD EXAMPLE - Each class has a single responsibility</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Responsibility 1: business logic only</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> OrderCalculator <span class="op">{</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">calculateTotal</span><span class="op">(</span><span class="va">items</span><span class="op">:</span> <span class="dt">Map</span>&lt;<span class="va">String</span><span class="op">,</span> <span class="va">Double</span>&gt;<span class="op">):</span> <span class="dt">Double</span> <span class="op">{</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> items<span class="op">.</span>values<span class="op">.</span>sum<span class="op">()</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Responsibility 2: persistence only</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> OrderRepository <span class="op">{</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">save</span><span class="op">(</span><span class="va">orderId</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">total</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Saving order </span><span class="ss">$orderId</span><span class="st"> with total £</span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>total<span class="op">)</span><span class="ss">}</span><span class="st"> to database...&quot;</span><span class="op">)</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">// Responsibility 3: notification only</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> OrderNotifier <span class="op">{</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">sendConfirmation</span><span class="op">(</span><span class="va">customerEmail</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">orderId</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Sending confirmation to </span><span class="ss">$customerEmail</span><span class="st"> for order </span><span class="ss">$orderId</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">// A coordinator brings them together, but each class has one job</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">items</span> <span class="op">=</span> mapOf<span class="op">(</span><span class="st">&quot;Laptop&quot;</span> to <span class="fl">999.99</span><span class="op">,</span> <span class="st">&quot;Mouse&quot;</span> to <span class="fl">29.99</span><span class="op">,</span> <span class="st">&quot;Keyboard&quot;</span> to <span class="fl">59.99</span><span class="op">)</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">orderId</span> <span class="op">=</span> <span class="st">&quot;ORD-4821&quot;</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">email</span> <span class="op">=</span> <span class="st">&quot;student@university.ac.uk&quot;</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">calculator</span> <span class="op">=</span> OrderCalculator<span class="op">()</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">repository</span> <span class="op">=</span> OrderRepository<span class="op">()</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">notifier</span> <span class="op">=</span> OrderNotifier<span class="op">()</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">total</span> <span class="op">=</span> calculator<span class="op">.</span>calculateTotal<span class="op">(</span>items<span class="op">)</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    repository<span class="op">.</span>save<span class="op">(</span>orderId<span class="op">,</span> total<span class="op">)</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    notifier<span class="op">.</span>sendConfirmation<span class="op">(</span>email<span class="op">,</span> orderId<span class="op">)</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>Saving order ORD-4821 with total £1089.97 to database...
+Sending confirmation to student@university.ac.uk for order ORD-4821</code></pre>
+<p>Now, if the database changes, only <code>OrderRepository</code> needs
+updating. If the email provider changes, only <code>OrderNotifier</code>
+changes. The business logic remains untouched. Each class has
+<strong>one reason to change</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> SRP doesn’t mean a class can only have one
+method. An <code>OrderCalculator</code> might legitimately have methods
+for calculating totals, applying discounts, and adding VAT — all of
+which belong to the same concern (order pricing logic).</p>
+</blockquote>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />
+<h2 id="whole-part-relationships-and-object-composition">Whole-Part
+Relationships and Object Composition</h2>
+<h3 id="the-idea">The Idea</h3>
+<p>In OOP, objects don’t have to exist in isolation. A class (the
+“whole”) can be <strong>composed of</strong> other objects (the
+“parts”). This is the foundation of <strong>object composition</strong>
+— one of the most powerful tools in software design.</p>
+<p>Even something as simple as a class with a <code>String</code>
+property is using composition — the <code>String</code> is an object
+that forms part of the containing class.</p>
+<h3 id="why-use-composition">Why Use Composition?</h3>
+<p>Consider an <code>Employee</code> class. An employee has an address.
+You could add address fields directly to <code>Employee</code>:</p>
+<pre><code>Employee
+  - name
+  - streetLine1
+  - streetLine2
+  - city
+  - postcode</code></pre>
+<p>But this is messy. What if multiple employees live at the same
+address? What if you need to reuse address logic elsewhere? A better
+approach is to create an <code>Address</code> class and compose it into
+<code>Employee</code>.</p>
+<pre><code>Employee                Address
+  - name                  - streetLine1
+  - address  --------&gt;    - streetLine2
+  - contracts             - city
+       |                  - postcode
+       v
+   Contract
+   - startDate
+   - role</code></pre>
+<h3 id="two-types-of-whole-part-relationship">Two Types of Whole-Part
+Relationship</h3>
+<p>There are two distinct flavours of composition in OOP:</p>
+<h4 id="aggregation-has-a">Aggregation (“Has-A”)</h4>
+<p>In aggregation, the part <strong>exists independently</strong> of the
+whole. The whole uses the part, but does not own it. If the whole is
+destroyed, the parts survive.</p>
+<p>Example: A <code>Car</code> has <code>Passengers</code>. If you
+destroy the car, the passengers still exist.</p>
+<h4 id="composition-must-have-a">Composition (“Must-Have-A”)</h4>
+<p>In composition (strict sense), the part <strong>has no meaningful
+existence</strong> without the whole. The whole owns its parts. If the
+whole is destroyed, so are the parts.</p>
+<p>Example: A <code>Car</code> has a <code>Gearbox</code>. Destroy the
+car, destroy the gearbox — the gearbox is meaningless without the car it
+belongs to.</p>
+<pre><code>+-----------------------------+         +-----------------------------+
+|        AGGREGATION          |         |         COMPOSITION          |
+|-----------------------------|         |-----------------------------|
+|                             |         |                             |
+|   Car  &lt;&gt;------  Passenger  |         |   Car  *------  Gearbox    |
+|                             |         |                             |
+|   Parts exist independently |         |   Parts owned by the whole  |
+|   Lifetime NOT tied         |         |   Lifetime tied together    |
++-----------------------------+         +-----------------------------+</code></pre>
+<h3 id="composition-in-kotlin">Composition in Kotlin</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">time</span><span class="op">.</span><span class="im">LocalDate</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Address exists as an independent, reusable class</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="kw">class</span> Address<span class="op">(</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">streetLine1</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">city</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">postcode</span><span class="op">:</span> <span class="dt">String</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Contract represents an employment contract</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="kw">class</span> Contract<span class="op">(</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">role</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">startDate</span><span class="op">:</span> <span class="dt">LocalDate</span><span class="op">,</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">salaryGBP</span><span class="op">:</span> <span class="dt">Double</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co">// Employee is composed of Address and a list of Contract objects</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Employee<span class="op">(</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">employeeId</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">address</span><span class="op">:</span> <span class="dt">Address</span><span class="op">,</span>                  <span class="co">// Composition / Aggregation of Address</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">contracts</span><span class="op">:</span> <span class="dt">MutableList</span>&lt;<span class="va">Contract</span>&gt;   <span class="co">// Composition of Contract history</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">addContract</span><span class="op">(</span><span class="va">contract</span><span class="op">:</span> <span class="dt">Contract</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        contracts<span class="op">.</span>add<span class="op">(</span>contract<span class="op">)</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;New contract added for </span><span class="ss">$name</span><span class="st">: </span><span class="ss">${</span>contract<span class="op">.</span>role<span class="ss">}</span><span class="st"> starting </span><span class="ss">${</span>contract<span class="op">.</span>startDate<span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">printSummary</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- Employee Summary ---&quot;</span><span class="op">)</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Name: </span><span class="ss">$name</span><span class="st"> (ID: </span><span class="ss">$employeeId</span><span class="st">)&quot;</span><span class="op">)</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Address: </span><span class="ss">${</span>address<span class="op">.</span>streetLine1<span class="ss">}</span><span class="st">, </span><span class="ss">${</span>address<span class="op">.</span>city<span class="ss">}</span><span class="st">, </span><span class="ss">${</span>address<span class="op">.</span>postcode<span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;Contract History:&quot;</span><span class="op">)</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>        contracts<span class="op">.</span>forEach <span class="op">{</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>            println<span class="op">(</span><span class="st">&quot;  - </span><span class="ss">${</span>it<span class="op">.</span>role<span class="ss">}</span><span class="st"> | From: </span><span class="ss">${</span>it<span class="op">.</span>startDate<span class="ss">}</span><span class="st"> | Salary: £</span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>it<span class="op">.</span>salaryGBP<span class="op">)</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Create an Address object</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">homeAddress</span> <span class="op">=</span> Address<span class="op">(</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>        streetLine1 <span class="op">=</span> <span class="st">&quot;12 Maple Street&quot;</span><span class="op">,</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>        city <span class="op">=</span> <span class="st">&quot;Birmingham&quot;</span><span class="op">,</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>        postcode <span class="op">=</span> <span class="st">&quot;B1 2AB&quot;</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Create initial contract</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">firstContract</span> <span class="op">=</span> Contract<span class="op">(</span></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>        role <span class="op">=</span> <span class="st">&quot;Junior Developer&quot;</span><span class="op">,</span></span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>        startDate <span class="op">=</span> LocalDate<span class="op">.</span>of<span class="op">(</span><span class="dv">2022</span><span class="op">,</span> <span class="dv">9</span><span class="op">,</span> <span class="dv">1</span><span class="op">),</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>        salaryGBP <span class="op">=</span> <span class="fl">28000.00</span></span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Create Employee, composed of Address and initial Contract</span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">employee</span> <span class="op">=</span> Employee<span class="op">(</span></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>        name <span class="op">=</span> <span class="st">&quot;Sarah Chen&quot;</span><span class="op">,</span></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>        employeeId <span class="op">=</span> <span class="st">&quot;EMP-1091&quot;</span><span class="op">,</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>        address <span class="op">=</span> homeAddress<span class="op">,</span></span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>        contracts <span class="op">=</span> mutableListOf<span class="op">(</span>firstContract<span class="op">)</span></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Add a new contract (promotion)</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">promotionContract</span> <span class="op">=</span> Contract<span class="op">(</span></span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>        role <span class="op">=</span> <span class="st">&quot;Software Engineer&quot;</span><span class="op">,</span></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>        startDate <span class="op">=</span> LocalDate<span class="op">.</span>of<span class="op">(</span><span class="dv">2024</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">15</span><span class="op">),</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>        salaryGBP <span class="op">=</span> <span class="fl">42000.00</span></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>    employee<span class="op">.</span>addContract<span class="op">(</span>promotionContract<span class="op">)</span></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a>    employee<span class="op">.</span>printSummary<span class="op">()</span></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>New contract added for Sarah Chen: Software Engineer starting 2024-01-15
+
+--- Employee Summary ---
+Name: Sarah Chen (ID: EMP-1091)
+Address: 12 Maple Street, Birmingham, B1 2AB
+Contract History:
+  - Junior Developer | From: 2022-09-01 | Salary: £28000.00
+  - Software Engineer | From: 2024-01-15 | Salary: £42000.00</code></pre>
+<h3 id="composition-vs-inheritance">Composition vs Inheritance</h3>
+<p>There is a well-known design principle: <strong>“Favour composition
+over inheritance”</strong>. Inheritance creates a tight coupling between
+parent and child classes, which can become fragile as a codebase grows.
+Composition, on the other hand, is more flexible because you can swap
+out composed parts without restructuring the class hierarchy. A good
+rule of thumb:</p>
+<ul>
+<li>Use <strong>inheritance</strong> when there is a genuine IS-A
+relationship</li>
+<li>Use <strong>composition</strong> when there is a HAS-A
+relationship</li>
+</ul>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />
+<h2 id="liskov-substitution-principle">Liskov Substitution
+Principle</h2>
+<h3 id="the-principle-1">The Principle</h3>
+<p>The <strong>Liskov Substitution Principle (LSP)</strong> was
+introduced by Barbara Liskov in her 1988 keynote address. It is the ‘L’
+in SOLID, and it states:</p>
+<blockquote>
+<p><em>“If S is a subtype of T, then objects of type T may be replaced
+by objects of type S without altering the correctness of the
+program.”</em></p>
+</blockquote>
+<p>In simpler terms: <strong>subtypes must be substitutable for their
+base types</strong>. If you have code that works with a
+<code>Shape</code>, it must work correctly regardless of whether the
+<code>Shape</code> is a <code>Circle</code>, a <code>Rectangle</code>,
+or any other subtype. The behaviour should not break when you substitute
+a subclass for a parent class.</p>
+<h3 id="lsp-and-polymorphism">LSP and Polymorphism</h3>
+<p>LSP extends polymorphism with a <strong>behavioural
+contract</strong>. Polymorphism tells us that we <em>can</em> use
+subclasses in place of a superclass. LSP tells us that we <em>must</em>
+ensure this substitution doesn’t change the expected behaviour of the
+program.</p>
+<h3 id="a-real-android-example">A Real Android Example</h3>
+<p>In Android, the <code>addView()</code> method of a
+<code>Layout</code> class expects a <code>View</code> parameter.
+However, you can pass a <code>Button</code>, a <code>TextView</code>, or
+any other widget — because <code>Button</code> inherits from
+<code>TextView</code>, which inherits from <code>View</code>. This is
+LSP in action: any subtype of <code>View</code> can be substituted
+safely.</p>
+<pre><code>View
+ +-- TextView
+ |    +-- Button
+ |    +-- EditText
+ +-- ImageView
+ +-- RecyclerView</code></pre>
+<p>Any method that accepts a <code>View</code> will work correctly when
+passed a <code>Button</code>, an <code>EditText</code>, or an
+<code>ImageView</code>.</p>
+<h3 id="demonstrating-lsp">Demonstrating LSP</h3>
+<p>Here is a correct, LSP-compliant class hierarchy:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Base class: Area reporter for any shape</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> <span class="kw">class</span> AreaReporter<span class="op">(</span><span class="kw">val</span> <span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">open</span> <span class="kw">fun</span> <span class="fu">reportArea</span><span class="op">():</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="st">&quot;</span><span class="ss">$name</span><span class="st"> has an area (to be calculated by subclass)&quot;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Circle correctly extends AreaReporter</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CircleReporter<span class="op">(</span><span class="kw">val</span> <span class="va">radius</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">:</span> <span class="dt">AreaReporter</span><span class="op">(</span>&quot;<span class="va">Circle</span>&quot;<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">reportArea</span><span class="op">():</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> <span class="va">area</span> <span class="op">=</span> Math<span class="op">.</span>PI <span class="op">*</span> radius <span class="op">*</span> radius</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="st">&quot;</span><span class="ss">$name</span><span class="st"> with radius </span><span class="ss">$radius</span><span class="st"> has area: </span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>area<span class="op">)</span><span class="ss">}</span><span class="st">&quot;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">// Square correctly extends AreaReporter</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SquareReporter<span class="op">(</span><span class="kw">val</span> <span class="va">side</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">:</span> <span class="dt">AreaReporter</span><span class="op">(</span>&quot;<span class="va">Square</span>&quot;<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">reportArea</span><span class="op">():</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> <span class="va">area</span> <span class="op">=</span> side <span class="op">*</span> side</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="st">&quot;</span><span class="ss">$name</span><span class="st"> with side </span><span class="ss">$side</span><span class="st"> has area: </span><span class="ss">${</span><span class="st">&quot;%.2f&quot;</span><span class="op">.</span>format<span class="op">(</span>area<span class="op">)</span><span class="ss">}</span><span class="st">&quot;</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co">// Function that works with ANY AreaReporter subtype - LSP compliant</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">printAreaReport</span><span class="op">(</span><span class="va">reporter</span><span class="op">:</span> <span class="dt">AreaReporter</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span>reporter<span class="op">.</span>reportArea<span class="op">())</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">shapes</span><span class="op">:</span> List<span class="op">&lt;</span>AreaReporter<span class="op">&gt;</span> <span class="op">=</span> listOf<span class="op">(</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>        CircleReporter<span class="op">(</span>radius <span class="op">=</span> <span class="fl">7.0</span><span class="op">),</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>        SquareReporter<span class="op">(</span>side <span class="op">=</span> <span class="fl">5.0</span><span class="op">),</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>        CircleReporter<span class="op">(</span>radius <span class="op">=</span> <span class="fl">3.5</span><span class="op">)</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Every subtype works correctly here - LSP is satisfied</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>    shapes<span class="op">.</span>forEach <span class="op">{</span> printAreaReport<span class="op">(</span>it<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>Circle with radius 7.0 has area: 153.94
+Square with side 5.0 has area: 25.00
+Circle with radius 3.5 has area: 38.48</code></pre>
+<h3 id="lsp-violation-the-ifelse-type-check">LSP Violation: The if/else
+Type Check</h3>
+<p>A <strong>common way to violate LSP</strong> is to use
+<code>if/else</code> (or Kotlin’s <code>when</code>) to check the actual
+subtype inside a method, and then change behaviour based on it. If you
+find yourself writing this kind of code, it is a sign that your class
+hierarchy may not truly be substitutable.</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">// BAD EXAMPLE - LSP Violation</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> <span class="kw">class</span> Bird<span class="op">(</span><span class="kw">val</span> <span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">open</span> <span class="kw">fun</span> <span class="fu">move</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$name</span><span class="st"> is moving&quot;</span><span class="op">)</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Eagle<span class="op">(</span><span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">:</span> <span class="dt">Bird</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">move</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$name</span><span class="st"> is soaring through the sky&quot;</span><span class="op">)</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Penguin<span class="op">(</span><span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">:</span> <span class="dt">Bird</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Penguins can&#39;t fly - this creates a behavioural mismatch</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">override</span> <span class="kw">fun</span> <span class="fu">move</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$name</span><span class="st"> is waddling along the ground&quot;</span><span class="op">)</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co">// VIOLATION: The function checks subtype to adjust behaviour</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co">// This defeats the purpose of polymorphism and LSP</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">makeItFly</span><span class="op">(</span><span class="va">bird</span><span class="op">:</span> <span class="dt">Bird</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>bird <span class="kw">is</span> Penguin<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">${</span>bird<span class="op">.</span>name<span class="ss">}</span><span class="st"> cannot fly! LSP is being violated here.&quot;</span><span class="op">)</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>        println<span class="op">(</span><span class="st">&quot;</span><span class="ss">${</span>bird<span class="op">.</span>name<span class="ss">}</span><span class="st"> takes flight!&quot;</span><span class="op">)</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">birds</span><span class="op">:</span> List<span class="op">&lt;</span>Bird<span class="op">&gt;</span> <span class="op">=</span> listOf<span class="op">(</span>Eagle<span class="op">(</span><span class="st">&quot;Golden Eagle&quot;</span><span class="op">),</span> Penguin<span class="op">(</span><span class="st">&quot;Emperor Penguin&quot;</span><span class="op">))</span></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>    birds<span class="op">.</span>forEach <span class="op">{</span> makeItFly<span class="op">(</span>it<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Sample Output:</strong></p>
+<pre><code>Golden Eagle takes flight!
+Emperor Penguin cannot fly! LSP is being violated here.</code></pre>
+<p>The <code>makeItFly()</code> function cannot be used with all
+<code>Bird</code> subtypes interchangeably — it breaks for
+<code>Penguin</code>. This is a <strong>design smell</strong>. The fix
+would be to reconsider the hierarchy — perhaps <code>Bird</code> should
+not have a <code>fly()</code> concept at all. Instead, you might use an
+interface <code>Flyable</code> that only flying birds implement.</p>
+<h3 id="lsp-vs-polymorphism-a-summary">LSP vs Polymorphism: A
+Summary</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 38%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Polymorphism</th>
+<th>Liskov Substitution Principle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Focus</strong></td>
+<td><em>Can</em> different types be used uniformly?</td>
+<td><em>Should</em> they behave consistently?</td>
+</tr>
+<tr>
+<td><strong>Mechanism</strong></td>
+<td>Method overriding</td>
+<td>Behavioural contracts</td>
+</tr>
+<tr>
+<td><strong>Violation indicator</strong></td>
+<td>N/A</td>
+<td><code>if/else</code> or <code>when</code> checks on subtype</td>
+</tr>
+<tr>
+<td><strong>Goal</strong></td>
+<td>Code reuse and flexibility</td>
+<td>Correctness and reliability</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ensuring-lsp-compliance">Ensuring LSP Compliance</h3>
+<ul>
+<li>Subclasses should <strong>strengthen, not weaken</strong> the
+contract of the parent class</li>
+<li>Subclasses should not <strong>throw exceptions</strong> that the
+parent class does not</li>
+<li>If a subclass requires special handling, <strong>reconsider the
+inheritance hierarchy</strong> — perhaps an interface-based approach is
+more appropriate</li>
+</ul>
+<p><a href="#table-of-contents">↑ Back to Table of Contents</a></p>
+<hr />

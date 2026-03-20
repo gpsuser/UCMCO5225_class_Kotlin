@@ -1,0 +1,350 @@
+<h1
+id="worksheet-oop-principles-srp-lsp-and-object-composition">Worksheet:
+OOP Principles, SRP, LSP, and Object Composition</h1>
+<hr />
+<h2 id="quiz">Quiz</h2>
+<h3 id="fill-in-the-blanks">Fill in the Blanks</h3>
+<p>Complete each sentence by choosing the correct word from the word
+bank beneath it. Each word is used exactly once.</p>
+<hr />
+<p><strong>Question 1</strong></p>
+<p>In Kotlin, classes are __________ for inheritance by default. To
+permit subclassing, the class must be marked with the __________
+keyword. When a subclass replaces a function defined in the parent, the
+__________ keyword must appear before the function in the subclass. A
+subclass is also called a __________ class.</p>
+<p><strong>Word bank (scrambled):</strong> <code>child</code>  | 
+<code>override</code>  |  <code>open</code>  |  <code>closed</code></p>
+<hr />
+<p><strong>Question 2</strong></p>
+<p>Encapsulation means hiding __________ details and exposing only a
+well-defined interface. In Kotlin, a property declared as __________ can
+only be accessed from within the class that owns it. The __________
+modifier makes a declaration visible anywhere within the same compiled
+unit. A class that enforces validation inside its methods helps maintain
+data __________.</p>
+<p><strong>Word bank (scrambled):</strong> <code>integrity</code>  | 
+<code>internal</code>  |  <code>implementation</code>  | 
+<code>private</code></p>
+<hr />
+<p><strong>Question 3</strong></p>
+<p>The Liskov Substitution Principle states that objects of a subtype
+must be __________ for their base type without altering programme
+correctness. A common indicator of an LSP violation is the use of
+__________ or __________ expressions to branch on a specific subtype
+inside a general-purpose function. LSP is represented by the letter
+__________ in the SOLID acronym.</p>
+<p><strong>Word bank (scrambled):</strong> <code>L</code>  | 
+<code>when</code>  |  <code>substitutable</code>  |  <code>if</code></p>
+<hr />
+<h3 id="multiple-choice">Multiple Choice</h3>
+<p>Circle or state the letter of the best answer for each question.</p>
+<hr />
+<p><strong>Question 4</strong></p>
+<p>Which statement most accurately describes the Single Responsibility
+Principle?</p>
+<ul>
+<li><ol type="A">
+<li>A class should contain only one field<br />
+</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>A class should have only one reason to change<br />
+</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>A class should implement only one interface<br />
+</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>A class should never be subclassed</li>
+</ol></li>
+</ul>
+<hr />
+<p><strong>Question 5</strong></p>
+<p>In a whole-part relationship, which type allows the part to
+<strong>exist independently</strong> of the whole?</p>
+<pre><code>+-------------------+       +-------------------+
+|   Type X          |       |   Type Y          |
+|-------------------|       |-------------------|
+|  Whole &lt;&gt;----Part |       |  Whole *-----Part |
+|  Part outlives    |       |  Part destroyed   |
+|  the whole        |       |  with the whole   |
++-------------------+       +-------------------+</code></pre>
+<ul>
+<li><ol type="A">
+<li>Inheritance<br />
+</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Composition<br />
+</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Aggregation<br />
+</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Polymorphism</li>
+</ol></li>
+</ul>
+<hr />
+<p><strong>Question 6</strong></p>
+<p>Which of the following is a key difference between an
+<strong>abstract class</strong> and an <strong>interface</strong> in
+Kotlin?</p>
+<ul>
+<li><ol type="A">
+<li>Abstract classes cannot contain concrete (non-abstract)
+functions<br />
+</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>A class can implement multiple interfaces but extend only one
+abstract class<br />
+</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Interfaces can declare constructor parameters; abstract classes
+cannot<br />
+</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Abstract functions may only appear inside interfaces, not abstract
+classes</li>
+</ol></li>
+</ul>
+<hr />
+<h2 id="tasks">Tasks</h2>
+<h3 id="task-1-vehicle-fleet-reporter">Task 1 — Vehicle Fleet
+Reporter</h3>
+<p>A transport company needs to print a preparation summary for vehicles
+in its fleet. Your job is to complete the class hierarchy below so that
+<code>printFleet()</code> calls the correct <code>describe()</code>
+method for each vehicle type without needing to check which type it
+is.</p>
+<p><strong>Requirements</strong></p>
+<ul>
+<li><code>Vehicle</code> is the base class with properties
+<code>make: String</code> and <code>fuelType: String</code>, and an open
+function <code>describe()</code> that returns a basic description
+string</li>
+<li><code>Car</code> extends <code>Vehicle</code> and adds
+<code>numDoors: Int</code>; its <code>describe()</code> should mention
+the number of doors</li>
+<li><code>Motorcycle</code> extends <code>Vehicle</code> and adds
+<code>hasSidecar: Boolean</code>; its <code>describe()</code> should
+note whether a sidecar is fitted</li>
+<li><code>printFleet()</code> accepts a <code>List&lt;Vehicle&gt;</code>
+and prints the result of <code>describe()</code> for every vehicle</li>
+</ul>
+<p><strong>Scaffolding</strong></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// </span><span class="al">TODO</span><span class="co">: mark this class appropriately for inheritance</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Vehicle<span class="op">(</span><span class="kw">val</span> <span class="va">make</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">fuelType</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// </span><span class="al">TODO</span><span class="co">: add describe() — returns &quot;$make ($fuelType)&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">// </span><span class="al">TODO</span><span class="co">: extend Vehicle</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Car<span class="op">(</span><span class="va">make</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">fuelType</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">numDoors</span><span class="op">:</span> <span class="dt">Int</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// </span><span class="al">TODO</span><span class="co">: override describe() — return &quot;$make ($fuelType) - $numDoors doors&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">// </span><span class="al">TODO</span><span class="co">: extend Vehicle</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Motorcycle<span class="op">(</span><span class="va">make</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">fuelType</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">hasSidecar</span><span class="op">:</span> <span class="dt">Boolean</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// </span><span class="al">TODO</span><span class="co">: override describe() — return &quot;$make ($fuelType) - sidecar: $hasSidecar&quot;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">printFleet</span><span class="op">(</span><span class="va">vehicles</span><span class="op">:</span> <span class="dt">List</span>&lt;<span class="va">Vehicle</span>&gt;<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;=== Fleet Summary ===&quot;</span><span class="op">)</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>vehicle <span class="kw">in</span> vehicles<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: call describe() and print the result</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">fleet</span><span class="op">:</span> List<span class="op">&lt;</span>Vehicle<span class="op">&gt;</span> <span class="op">=</span> listOf<span class="op">(</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        Car<span class="op">(</span>make <span class="op">=</span> <span class="st">&quot;Ford&quot;</span><span class="op">,</span> fuelType <span class="op">=</span> <span class="st">&quot;Petrol&quot;</span><span class="op">,</span> numDoors <span class="op">=</span> <span class="dv">4</span><span class="op">),</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        Motorcycle<span class="op">(</span>make <span class="op">=</span> <span class="st">&quot;Honda&quot;</span><span class="op">,</span> fuelType <span class="op">=</span> <span class="st">&quot;Petrol&quot;</span><span class="op">,</span> hasSidecar <span class="op">=</span> <span class="kw">false</span><span class="op">),</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        Car<span class="op">(</span>make <span class="op">=</span> <span class="st">&quot;Tesla&quot;</span><span class="op">,</span> fuelType <span class="op">=</span> <span class="st">&quot;Electric&quot;</span><span class="op">,</span> numDoors <span class="op">=</span> <span class="dv">4</span><span class="op">),</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        Motorcycle<span class="op">(</span>make <span class="op">=</span> <span class="st">&quot;Ural&quot;</span><span class="op">,</span> fuelType <span class="op">=</span> <span class="st">&quot;Petrol&quot;</span><span class="op">,</span> hasSidecar <span class="op">=</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    printFleet<span class="op">(</span>fleet<span class="op">)</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Expected Output</strong></p>
+<pre><code>=== Fleet Summary ===
+Ford (Petrol) - 4 doors
+Honda (Petrol) - sidecar: false
+Tesla (Electric) - 4 doors
+Ural (Petrol) - sidecar: true</code></pre>
+<hr />
+<h3 id="task-2-encapsulated-temperature-reading">Task 2 — Encapsulated
+Temperature Reading</h3>
+<p>A weather station stores temperature readings. The internal value
+must not be modified directly — it should only be updated through a
+validated setter method.</p>
+<p><strong>Requirements</strong></p>
+<ul>
+<li><code>TemperatureReading</code> holds a private
+<code>temperatureCelsius: Double</code></li>
+<li><code>getCelsius()</code> returns the stored value</li>
+<li><code>getFahrenheit()</code> converts and returns the value using
+the formula: <code>(C × 9/5) + 32</code></li>
+<li><code>setTemperature(value: Double)</code> updates the stored value
+<strong>only</strong> if it is above absolute zero
+(<code>-273.15</code>); otherwise, print
+<code>"Error: temperature below absolute zero."</code> and leave the
+value unchanged</li>
+</ul>
+<p><strong>Scaffolding</strong></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TemperatureReading<span class="op">(</span><span class="va">initialTemp</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// </span><span class="al">TODO</span><span class="co">: store the initial temperature as a private property</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Hint: validate on construction too — reject values below -273.15</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">getCelsius</span><span class="op">():</span> <span class="dt">Double</span> <span class="op">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: return the stored temperature</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">getFahrenheit</span><span class="op">():</span> <span class="dt">Double</span> <span class="op">{</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: convert and return (C * 9.0/5.0) + 32.0</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">setTemperature</span><span class="op">(</span><span class="va">value</span><span class="op">:</span> <span class="dt">Double</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: validate and either update or print the error message</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">reading</span> <span class="op">=</span> TemperatureReading<span class="op">(</span><span class="fl">20.0</span><span class="op">)</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;Celsius: </span><span class="ss">${</span>reading<span class="op">.</span>getCelsius<span class="op">()</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;Fahrenheit: </span><span class="ss">${</span><span class="st">&quot;%.1f&quot;</span><span class="op">.</span>format<span class="op">(</span>reading<span class="op">.</span>getFahrenheit<span class="op">())</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    reading<span class="op">.</span>setTemperature<span class="op">(</span><span class="fl">100.0</span><span class="op">)</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;Updated Celsius: </span><span class="ss">${</span>reading<span class="op">.</span>getCelsius<span class="op">()</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    reading<span class="op">.</span>setTemperature<span class="op">(-</span><span class="fl">300.0</span><span class="op">)</span>  <span class="co">// Should be rejected</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;After invalid update: </span><span class="ss">${</span>reading<span class="op">.</span>getCelsius<span class="op">()</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Expected Output</strong></p>
+<pre><code>Celsius: 20.0
+Fahrenheit: 68.0
+Updated Celsius: 100.0
+Error: temperature below absolute zero.
+After invalid update: 100.0</code></pre>
+<hr />
+<h3
+id="challenge-task-library-system-with-single-responsibility">Challenge
+Task — Library System with Single Responsibility</h3>
+<p>A small library system needs to manage its book catalogue, track
+active loans, and produce reports. Currently all logic sits in one
+bloated class. Your task is to redesign it using the Single
+Responsibility Principle.</p>
+<p><strong>Requirements</strong></p>
+<ul>
+<li><code>Book</code> is a <code>data class</code> with
+<code>isbn: String</code>, <code>title: String</code>, and
+<code>author: String</code></li>
+<li><code>BookCatalogue</code> is responsible only for storing books —
+implement <code>addBook(book: Book)</code> and
+<code>findByIsbn(isbn: String): Book?</code></li>
+<li><code>LoanManager</code> is responsible only for tracking loans —
+implement <code>checkOut(isbn: String)</code> (adds to a
+<code>MutableSet&lt;String&gt;</code> of loaned ISBNs),
+<code>returnBook(isbn: String)</code>, and
+<code>isOnLoan(isbn: String): Boolean</code></li>
+<li><code>LibraryReporter</code> is responsible only for printing —
+implement
+<code>printCatalogueReport(catalogue: BookCatalogue, loanManager: LoanManager)</code>
+which lists every book and shows <code>[ON LOAN]</code> or
+<code>[AVAILABLE]</code> next to each title</li>
+<li>Wire all three together in <code>main()</code> using the sample data
+below</li>
+</ul>
+<p><strong>Scaffolding</strong></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="kw">class</span> Book<span class="op">(</span><span class="kw">val</span> <span class="va">isbn</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">title</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="kw">val</span> <span class="va">author</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BookCatalogue <span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="kw">val</span> <span class="va">books</span> <span class="op">=</span> mutableListOf<span class="op">&lt;</span>Book<span class="op">&gt;()</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">addBook</span><span class="op">(</span><span class="va">book</span><span class="op">:</span> <span class="dt">Book</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: add book to the list and print &quot;Added: ${book.title}&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">findByIsbn</span><span class="op">(</span><span class="va">isbn</span><span class="op">:</span> <span class="dt">String</span><span class="op">):</span> <span class="dt">Book</span><span class="op">?</span> <span class="op">{</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: return the first book with a matching isbn, or null</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LoanManager <span class="op">{</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="kw">val</span> <span class="va">loanedIsbns</span> <span class="op">=</span> mutableSetOf<span class="op">&lt;</span><span class="kw">String</span><span class="op">&gt;()</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">checkOut</span><span class="op">(</span><span class="va">isbn</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: add isbn to the set and print &quot;Checked out: $isbn&quot;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">returnBook</span><span class="op">(</span><span class="va">isbn</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: remove isbn from the set and print &quot;Returned: $isbn&quot;</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">isOnLoan</span><span class="op">(</span><span class="va">isbn</span><span class="op">:</span> <span class="dt">String</span><span class="op">):</span> <span class="dt">Boolean</span> <span class="op">{</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: return true if the isbn is in the set</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LibraryReporter <span class="op">{</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">printCatalogueReport</span><span class="op">(</span><span class="va">catalogue</span><span class="op">:</span> <span class="dt">BookCatalogue</span><span class="op">,</span> <span class="va">loanManager</span><span class="op">:</span> <span class="dt">LoanManager</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="co">// </span><span class="al">TODO</span><span class="co">: iterate over all books in the catalogue and print:</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        <span class="co">// &quot;${book.title} by ${book.author} — [ON LOAN] or [AVAILABLE]&quot;</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Hint: you will need to expose the book list somehow</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">catalogue</span> <span class="op">=</span> BookCatalogue<span class="op">()</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">loanManager</span> <span class="op">=</span> LoanManager<span class="op">()</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">reporter</span> <span class="op">=</span> LibraryReporter<span class="op">()</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    catalogue<span class="op">.</span>addBook<span class="op">(</span>Book<span class="op">(</span><span class="st">&quot;978-0-13-110362-7&quot;</span><span class="op">,</span> <span class="st">&quot;The C Programming Language&quot;</span><span class="op">,</span> <span class="st">&quot;Kernighan &amp; Ritchie&quot;</span><span class="op">))</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    catalogue<span class="op">.</span>addBook<span class="op">(</span>Book<span class="op">(</span><span class="st">&quot;978-0-13-468599-1&quot;</span><span class="op">,</span> <span class="st">&quot;The Pragmatic Programmer&quot;</span><span class="op">,</span> <span class="st">&quot;Hunt &amp; Thomas&quot;</span><span class="op">))</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    catalogue<span class="op">.</span>addBook<span class="op">(</span>Book<span class="op">(</span><span class="st">&quot;978-0-20-163361-5&quot;</span><span class="op">,</span> <span class="st">&quot;Design Patterns&quot;</span><span class="op">,</span> <span class="st">&quot;Gang of Four&quot;</span><span class="op">))</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    loanManager<span class="op">.</span>checkOut<span class="op">(</span><span class="st">&quot;978-0-13-468599-1&quot;</span><span class="op">)</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    loanManager<span class="op">.</span>checkOut<span class="op">(</span><span class="st">&quot;978-0-20-63361-5&quot;</span><span class="op">)</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- Library Report ---&quot;</span><span class="op">)</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    reporter<span class="op">.</span>printCatalogueReport<span class="op">(</span>catalogue<span class="op">,</span> loanManager<span class="op">)</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>    loanManager<span class="op">.</span>returnBook<span class="op">(</span><span class="st">&quot;978-0-13-468599-1&quot;</span><span class="op">)</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">--- Updated Report ---&quot;</span><span class="op">)</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    reporter<span class="op">.</span>printCatalogueReport<span class="op">(</span>catalogue<span class="op">,</span> loanManager<span class="op">)</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Expected Output</strong></p>
+<pre><code>Added: The C Programming Language
+Added: The Pragmatic Programmer
+Added: Design Patterns
+Checked out: 978-0-13-468599-1
+Checked out: 978-0-20-63361-5
+
+--- Library Report ---
+The C Programming Language by Kernighan &amp; Ritchie — [AVAILABLE]
+The Pragmatic Programmer by Hunt &amp; Thomas — [ON LOAN]
+Design Patterns by Gang of Four — [AVAILABLE]
+Returned: 978-0-13-468599-1
+
+--- Updated Report ---
+The C Programming Language by Kernighan &amp; Ritchie — [AVAILABLE]
+The Pragmatic Programmer by Hunt &amp; Thomas — [AVAILABLE]
+Design Patterns by Gang of Four — [AVAILABLE]</code></pre>
+<blockquote>
+<p><strong>Hint:</strong> To allow <code>LibraryReporter</code> to
+iterate over books without giving it direct access to
+<code>BookCatalogue</code>’s private list, consider adding a
+<code>getAllBooks(): List&lt;Book&gt;</code> method to
+<code>BookCatalogue</code>.</p>
+</blockquote>
